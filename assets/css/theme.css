@@ -1,0 +1,51 @@
+/* Stellaris-style theme, loaded after tech-tree.css. Card sizes are untouched so the tree layout stays intact. */
+:root { --space:#060d10; --hull:#0b1415; --teal:#2F6458; --glow:#6fe3c6; --gold:#e0b85c; --text:#d9e7e3; --muted:#9bb3ad; }
+body {
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff7 50%, transparent 51%) 0 0 / 240px 200px,
+    radial-gradient(1px 1px at 70% 60%, #fff5 50%, transparent 51%) 0 0 / 330px 280px,
+    radial-gradient(ellipse 80% 30% at 50% 0, #123b3a88, transparent 70%),
+    var(--space);
+}
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* Top bar */
+.float-Holder { background: var(--hull); border-bottom: 1px solid var(--teal); box-shadow: 0 2px 14px #000a; }
+.float-Element { border-radius: 0; clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%); }
+.float-Lowlight { background: #0f1c1d; }
+.float-Highlight { background: linear-gradient(180deg, #1c5e55, #123b36); box-shadow: inset 0 -3px 0 var(--glow); }
+.float-Contents { color: var(--text); }
+.float-Highlight .float-Contents { color: #fff; }
+#deepsearch { background: #07100f; color: var(--text); border: 1px solid var(--teal); border-radius: 0; padding: 4px 8px; width: 170px; }
+#deepsearch::placeholder { color: var(--muted); opacity: 1; }
+#deepsearch:focus { border-color: var(--glow); box-shadow: 0 0 8px #6fe3c688; }
+.float-Info { float: left; margin-top: 14px; padding: 5px 14px; color: var(--muted); font: 12px Arimo, Verdana, sans-serif; list-style: none; }
+.float-Info span { margin-right: 14px; }
+#version-label { color: var(--gold); font-weight: bold; }
+#progress, #search-count { color: var(--text); }
+#search-count { margin-left: 8px; font-size: 12px; font-family: Arimo, Verdana, sans-serif; }
+
+/* Connector lines: thicker and visible against the dark background */
+svg path { stroke-width: 3px; }
+svg path:not([class]) { stroke: #3d8a7c; }
+
+/* Cards */
+.tech { border-radius: 2px; box-shadow: inset 0 0 14px #000c, 0 0 0 1px #000; }
+.tech p.node-name { text-shadow: 0 1px 2px #000; }
+.tech p.node-title, .tech p.node-desc { color: var(--text); }
+.node:not(.active) .tech div.icon, .tech:not(.active) div.icon { filter: saturate(.8) brightness(.9); }
+.tech.society.active, .node.active.society { box-shadow: inset 0 0 14px #000c, 0 0 12px #5ACA9C77; }
+.tech.physics.active, .node.active.physics { box-shadow: inset 0 0 14px #000c, 0 0 12px #4396E277; }
+.tech.engineering.active, .node.active.engineering { box-shadow: inset 0 0 14px #000c, 0 0 12px #E29C4377; }
+
+/* Researched toggle: clearer target and state */
+.tech div.node-status { border: 1px solid #4aa593; background-color: #07100f; cursor: pointer; border-radius: 2px; }
+.tech div.node-status:hover { border-color: var(--glow); box-shadow: 0 0 6px #6fe3c6aa; }
+.tech div.node-status.active { border-color: var(--glow); background-color: #123b36; }
+
+/* Tooltips */
+.tooltipster-sidetip .tooltipster-box { background: #0b1415f5; border: 1px solid var(--glow); box-shadow: 0 0 18px #000, 0 0 10px #6fe3c633; font-size: 13px; line-height: 1.45; color: var(--text); }
+.tooltip-header { color: var(--gold); font-family: Orbitron, Arimo, sans-serif; letter-spacing: .03em; }
+.ui-tooltip { font-size: 13px; color: var(--text); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }

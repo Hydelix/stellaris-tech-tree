@@ -45,7 +45,7 @@
           "prerequisites_names": [],
           "weight_modifiers": [],
           "potential": [
-            "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
+            "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
             "Is NOT an Individual Machine empire"
           ],
           "children": [
@@ -85,7 +85,7 @@
                 "(×<b style='color:lime'>2.0</b>) Has the payback_researching_gene_clinics country flag"
               ],
               "potential": [
-                "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
+                "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
                 "Is NOT an Individual Machine empire"
               ],
               "children": [
@@ -5277,7 +5277,7 @@
                 "(×<b style='color:lime'>1.25</b>) Has Prosperity Traditions Tradition"
               ],
               "potential": [
-                "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
+                "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
               ],
               "children": [
                 {
@@ -5674,7 +5674,7 @@
                             "(×<b style='color:red'>0.01</b>) Has Government Civic: Inward Perfection"
                           ],
                           "potential": [
-                            "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
+                            "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
                           ],
                           "children": [
                             {
@@ -5717,7 +5717,7 @@
                                 "(×<b style='color:red'>0.01</b>) Has Government Civic: Inward Perfection"
                               ],
                               "potential": [
-                                "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
+                                "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
                               ],
                               "children": [],
                               "is_event": false,
@@ -7038,7 +7038,7 @@
             "(×<b style='color:lime'>2.0</b>) Number of owned pops meeting special conditions"
           ],
           "potential": [
-            "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
+            "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
             "One must be true\n    •   Has policy Slavery Allowed\n    •   Has Gestalt Consciousness Ethic"
           ],
           "children": [
@@ -8460,7 +8460,7 @@
             "(×<b style='color:lime'>2.0</b>) Owns the Javorian Pox Sample relic"
           ],
           "potential": [
-            "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
+            "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic"
           ],
           "children": [],
           "is_event": false,

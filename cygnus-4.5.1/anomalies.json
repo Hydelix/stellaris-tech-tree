@@ -3103,11 +3103,11 @@
     "tier": 1,
     "prerequisites_names": [],
     "weight_modifiers": [
-      "(+) All must be true<br/>    •   null<br/>\t    •   One must be true<br/>\t\t    •   Is of country type: default<br/>\t\t    •   Is of country type: Awakened Marauders<br/>\t\t    •   Is of country type: Fallen Empire<br/>\t\t    •   Is of country type: Awakened Empire<br/>\t\t    •   Is of country type: exiled<br/>\t    •   Does NOT have Gestalt Consciousness Ethic<br/>    •   Is NOT Homicidal<br/>    •   Does NOT have Gestalt Consciousness Ethic<br/>    •   perc_communications_with_playable>0"
+      "(+) All must be true<br/>    •   All must be true<br/>\t    •   One must be true<br/>\t\t    •   Is of country type: default<br/>\t\t    •   Is of country type: Awakened Marauders<br/>\t\t    •   Is of country type: Fallen Empire<br/>\t\t    •   Is of country type: Awakened Empire<br/>\t\t    •   Is of country type: exiled<br/>\t    •   Does NOT have Gestalt Consciousness Ethic<br/>    •   Is NOT Homicidal<br/>    •   Does NOT have Gestalt Consciousness Ethic<br/>    •   perc_communications_with_playable>0"
     ],
     "potential": [
       "Has the Galactic Paragons DLC",
-      "null\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
+      "All must be true\n    •   One must be true\n\t    •   Is of country type: default\n\t    •   Is of country type: Awakened Marauders\n\t    •   Is of country type: Fallen Empire\n\t    •   Is of country type: Awakened Empire\n\t    •   Is of country type: exiled\n    •   Does NOT have Gestalt Consciousness Ethic",
       "Does NOT have Gestalt Consciousness Ethic",
       "Is NOT Homicidal"
     ],

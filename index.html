@@ -167,10 +167,13 @@
             rel: 'stylesheet',
             href: '../assets/css/tech-tree.css'
         });
+        $('<link>').appendTo('head').attr({ type: 'text/css', rel: 'stylesheet', href: '../assets/css/theme.css' });
+        $('<link>').appendTo('head').attr({ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Orbitron:500,700&display=swap' });
         $('body').load('../assets/html/body.html', function() {
             $('<script>').appendTo('head').attr({ src: '../assets/js/header.js' });
             $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tracking.js' });
             $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tree.js' });
+            $('<script>').appendTo('head').attr({ src: '../assets/js/theme.js' });
         });
       };
     </script>
@@ -251,10 +254,11 @@
         <h2>Job list</h2>
         <div class="grid"><a class="tile" href="jobs/index.html"><span class="ver">2.2.7</span><span class="code">Jobs list (work in progress)</span></a></div>
         <footer>
-          Original code by <a href="https://gitlab.com/bipedalshark/stellaris-tech-tree" target="_blank">bipedalshark</a><br/>
-          Current parser code: <a href="https://github.com/BloodStainedCrow/stellaris-technology">GitHub</a><br/>
-          Current website code: <a href="https://github.com/BloodStainedCrow/stellaris-tech-tree">GitHub</a><br/>
-          Contributors: SlenderPlays, Tsudico, Turanar, BloodStainedCrow &amp; ark-1
+          Maintained by <a href="https://github.com/Hydelix" target="_blank">Hydelix</a><br/>
+          Website code: <a href="https://github.com/Hydelix/stellaris-tech-tree" target="_blank">GitHub</a><br/>
+          Forked from <a href="https://github.com/BloodStainedCrow/stellaris-tech-tree" target="_blank">BloodStainedCrow's tech tree</a>, originally created by <a href="https://gitlab.com/bipedalshark/stellaris-tech-tree" target="_blank">bipedalshark</a><br/>
+          Contributors: SlenderPlays, Tsudico, Turanar, BloodStainedCrow &amp; ark-1<br/>
+          Stellaris and its content belong to Paradox Interactive. This is an unofficial fan project.
         </footer>
       </main>
     </body>

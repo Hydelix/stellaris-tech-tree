@@ -145,7 +145,7 @@ function setup_search() {
         focus_idx = (idx + hits.length) % hits.length;
         const node = hits[focus_idx];
         node.style.opacity = 1;
-        node.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        node.scrollIntoView({ behavior: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth', block: 'center', inline: 'nearest' });
     };
 
     const run_search = (force) => {
@@ -157,6 +157,8 @@ function setup_search() {
 
         if (!term) {
             reset_all();
+            const c0 = document.getElementById('search-count');
+            if (c0) c0.textContent = '';
             return;
         }
 
@@ -175,6 +177,8 @@ function setup_search() {
         });
 
         if (hits.length) focus_hit(0);
+        const count = document.getElementById('search-count');
+        if (count) count.textContent = hits.length + (hits.length === 1 ? ' match' : ' matches');
     };
 
     const debounced = (() => {

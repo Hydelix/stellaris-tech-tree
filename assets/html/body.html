@@ -25,7 +25,10 @@
     </a>
   </li>
   <li class="float-Element float-Lowlight float-Search">
-    <input id="deepsearch" type="search" placeholder="Search techs" aria-label="Search techs"><span id="search-count" aria-live="polite"></span>
+    <input id="deepsearch" type="search" placeholder="Search techs" aria-label="Search techs">
+    <button type="button" id="search-prev" class="search-nav" title="Previous result (Shift+Enter)" aria-label="Previous result" disabled><svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    <button type="button" id="search-next" class="search-nav" title="Next result (Enter)" aria-label="Next result" disabled><svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    <span id="search-count" aria-live="polite"></span>
   </li>
   <li class="float-Info"><span id="version-label"></span><span id="progress" aria-live="polite"></span></li>
   <li class="float-RightElement float-RightBuffer">

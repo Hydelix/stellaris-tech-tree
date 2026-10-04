@@ -156,7 +156,7 @@
 
     <script>
       addEventListener('popstate', event => window.location.reload());
-      const ASSET_V = '20261005b'; // bump when assets change so browsers fetch the new files
+      const ASSET_V = '20261005c'; // bump when assets change so browsers fetch the new files
       const load_page = (param, title, replace) => {
         // replace=true is used for the automatic landing on the latest version, so Back doesn't loop
         history[replace ? 'replaceState' : 'pushState']({pageID: param}, param, `${param}/`);

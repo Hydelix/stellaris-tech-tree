@@ -139,6 +139,18 @@ function setup_search() {
         search_all_nodes().forEach(n => n.style.opacity = '');
     };
 
+    // Shows "2 of 7" (position of the highlighted result) and enables/disables the up/down buttons
+    const update_search_ui = () => {
+        const count = document.getElementById('search-count');
+        const term = input.val().trim();
+        if (count) {
+            if (!term) count.textContent = '';
+            else if (!hits.length) count.textContent = 'No matches';
+            else count.textContent = (focus_idx + 1) + ' of ' + hits.length;
+        }
+        $('#search-prev, #search-next').prop('disabled', !hits.length);
+    };
+
     const focus_hit = (idx) => {
         if (!hits.length) return;
         if (focus_idx >= 0 && hits[focus_idx]) hits[focus_idx].style.opacity = 0.6;
@@ -146,6 +158,7 @@ function setup_search() {
         const node = hits[focus_idx];
         node.style.opacity = 1;
         node.scrollIntoView({ behavior: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth', block: 'center', inline: 'nearest' });
+        update_search_ui();
     };
 
     const run_search = (force) => {
@@ -157,8 +170,7 @@ function setup_search() {
 
         if (!term) {
             reset_all();
-            const c0 = document.getElementById('search-count');
-            if (c0) c0.textContent = '';
+            update_search_ui();
             return;
         }
 
@@ -177,8 +189,7 @@ function setup_search() {
         });
 
         if (hits.length) focus_hit(0);
-        const count = document.getElementById('search-count');
-        if (count) count.textContent = hits.length + (hits.length === 1 ? ' match' : ' matches');
+        update_search_ui();
     };
 
     const debounced = (() => {
@@ -194,6 +205,13 @@ function setup_search() {
         e.preventDefault();
         run_search(false);               // make sure results match what is typed
         if (hits.length > 1) focus_hit(focus_idx + (e.shiftKey ? -1 : 1));
+    });
+
+    // Up/down arrows next to the search box step through the results
+    $('#search-prev, #search-next').off('.deepsearch').on('click.deepsearch', function (e) {
+        e.preventDefault();
+        run_search(false);
+        if (hits.length) focus_hit(focus_idx + (this.id === 'search-prev' ? -1 : 1));
     });
 
     // Re-apply the current term (used after switching tabs so the new tab is filtered too)

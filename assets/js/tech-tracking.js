@@ -158,6 +158,97 @@ function initDB() {
     };
 }
 
+var NEW_LIST = '__new__';
+
+function syncResearchButtons() {
+    var isNew = $('#research_selection').val() === NEW_LIST;
+    $('#research_load, #research_remove').prop('disabled', isNew);
+    renderPresetMenu();
+}
+
+// Custom dropdown (styled to match the site). The hidden <select id="research_selection"> holds the real value.
+function renderPresetMenu() {
+    if (!$('#preset_dd').length) return;
+    var sel = $('#research_selection'), menu = $('#preset_menu'), cur = sel.val();
+    menu.empty();
+    sel.find('option').each(function (i) {
+        $('<li role="option">')
+            .attr({ id: 'preset_opt_' + i, 'data-value': this.value, 'aria-selected': this.value === cur ? 'true' : 'false' })
+            .toggleClass('dd-new', this.value === NEW_LIST)
+            .toggleClass('dd-selected', this.value === cur)
+            .text(this.textContent)
+            .appendTo(menu);
+    });
+    $('#preset_btn .dd-text').text(sel.find('option').filter(function () { return this.value === cur; }).text());
+}
+
+function setupPresetDropdown() {
+    var btn = $('#preset_btn'), menu = $('#preset_menu'), sel = $('#research_selection');
+    if (!btn.length || btn.data('ready')) return;
+    btn.data('ready', true);
+    var active = -1;
+    var items = function () { return menu.children(); };
+    function setActive(i, noScroll) {
+        var els = items(); if (!els.length) return;
+        active = (i + els.length) % els.length;
+        els.removeClass('dd-active');
+        var el = els.eq(active).addClass('dd-active');
+        menu.attr('aria-activedescendant', el.attr('id'));
+        if (!noScroll && el[0].scrollIntoView) el[0].scrollIntoView({ block: 'nearest' });
+    }
+    function open() {
+        renderPresetMenu();
+        menu.prop('hidden', false);
+        btn.attr('aria-expanded', 'true');
+        var i = items().index(menu.find('.dd-selected'));
+        setActive(i < 0 ? 0 : i);
+        menu.trigger('focus');
+    }
+    function close(refocus) {
+        menu.prop('hidden', true);
+        btn.attr('aria-expanded', 'false');
+        if (refocus) btn.trigger('focus');
+    }
+    function choose(i) {
+        var el = items().eq(i);
+        if (!el.length) return;
+        sel.val(el.attr('data-value')).trigger('change');
+        close(true);
+    }
+    btn.on('click', function () { menu.prop('hidden') ? open() : close(true); });
+    btn.on('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (menu.prop('hidden')) open(); }
+    });
+    menu.on('keydown', function (e) {
+        switch (e.key) {
+            case 'ArrowDown': setActive(active + 1); break;
+            case 'ArrowUp': setActive(active - 1); break;
+            case 'Home': setActive(0); break;
+            case 'End': setActive(items().length - 1); break;
+            case 'Enter': case ' ': choose(active); break;
+            case 'Escape': close(true); break;
+            case 'Tab': close(false); return;
+            default: return;
+        }
+        e.preventDefault();
+    });
+    menu.on('mousemove', 'li', function () { setActive($(this).index(), true); });
+    menu.on('click', 'li', function () { choose($(this).index()); });
+    $(document).on('mousedown.presetdd', function (e) {
+        if (!menu.prop('hidden') && !$(e.target).closest('#preset_dd').length) close(false);
+    });
+}
+
+function addListOption(name) {
+    var sel = $('#research_selection');
+    var exists = sel.find('option').filter(function () { return this.value === name; }).length > 0;
+    if (!exists) {
+        $('<option>').val(name).text(name).insertBefore(sel.find('option').filter(function () { return this.value === NEW_LIST; }));
+    }
+    sel.val(name);
+    syncResearchButtons();
+}
+
 function findLists() {
     var objectStore = offlineDB.transaction("TreeStore").objectStore("TreeStore");
 
@@ -169,31 +260,39 @@ function findLists() {
             cursor.continue();
         }
         else {
-            lists.forEach(item => {
-                $('#research_list').append('<option value="' + item.name + '">' + item.name + '</option>');
+            var sel = $('#research_selection').empty();
+            lists.sort(function (a, b) { return a.name.localeCompare(b.name); });
+            lists.forEach(function (item) { $('<option>').val(item.name).text(item.name).appendTo(sel); });
+            $('<option>').val(NEW_LIST).text('Add New Preset').appendTo(sel);
+            sel.val(NEW_LIST);
+            syncResearchButtons();
+
+            sel.off('change').on('change', syncResearchButtons);
+            setupPresetDropdown();
+            $('#research_save').off('click').on('click', function(event) {
+                event.preventDefault();
+                var name = sel.val();
+                if (name === NEW_LIST) {
+                    name = $.trim(window.prompt('Name for the new preset:', 'My preset') || '');
+                    if (!name || name === NEW_LIST) return;
+                    var taken = sel.find('option').filter(function () { return this.value === name; }).length > 0;
+                    if (taken && !window.confirm('A preset named "' + name + '" already exists. Overwrite it?')) return;
+                } else if (!window.confirm('Overwrite preset "' + name + '" with your current progress?')) {
+                    return;
+                }
+                saveListToIndexedDB(name);
             });
-            $('#research_save').on('click', function(event) {
+            $('#research_load').off('click').on('click', function(event) {
                 event.preventDefault();
-                if($('#research_selection').val() && $.trim($('#research_selection').val()).length !== 0) {
-                    saveListToIndexedDB( $('#research_selection').val() );
-                } else {
-                    saveListToIndexedDB("Default List");
-                }
-            })
-            $('#research_load').on('click', function(event) {
+                if (sel.val() !== NEW_LIST) loadListFromIndexedDB(sel.val());
+            });
+            $('#research_remove').off('click').on('click', function(event) {
                 event.preventDefault();
-                if($('#research_selection').val() && $.trim($('#research_selection').val()).length !== 0) {
-                    loadListFromIndexedDB( $('#research_selection').val() );
-                } else {
-                    loadListFromIndexedDB("Default List");
+                var name = sel.val();
+                if (name !== NEW_LIST && window.confirm('Delete preset "' + name + '"? This cannot be undone.')) {
+                    removeListFromIndexedDB(name);
                 }
-            })
-            $('#research_remove').on('click', function(event) {
-                event.preventDefault();
-                if($('#research_selection').val() && $.trim($('#research_selection').val()).length !== 0) {
-                    removeListFromIndexedDB( $('#research_selection').val() );
-                }
-            })
+            });
             $('.research').removeClass('hide');
         }
     };
@@ -214,7 +313,8 @@ function saveListToIndexedDB(name) {
         var result = objectStore.put({name: name, data: data});
         result.onsuccess = function(event) {
             if(event.target.result && name == event.target.result) {
-                alert('Research List: ' + name + ' was saved successfully!')
+                addListOption(name);
+                alert('Preset "' + name + '" was saved.')
                 return true;
             }
         };
@@ -248,12 +348,12 @@ function loadListFromIndexedDB(name) {
                 });
             }
             else {
-                event.target.errorCode = `Research list "${name}" does not exist.`
+                event.target.errorCode = `Preset "${name}" does not exist.`
                 result.onerror(event);
             }
         };
         result.onerror = function(event) {
-            alert('Unable to load Research List: ' + name + '\nError: ' + event.target.errorCode);
+            alert('Unable to load preset: ' + name + '\nError: ' + event.target.errorCode);
         }
     } else {
         initDB();
@@ -265,13 +365,12 @@ function removeListFromIndexedDB(name) {
         var objectStore = offlineDB.transaction(["TreeStore"], "readwrite").objectStore("TreeStore");
         var result = objectStore.delete(name);
         result.onerror = function(event) {
-            alert('Unable to delete Research List: ' + name + '\nError: ' + event.target.errorCode);
+            alert('Unable to delete preset: ' + name + '\nError: ' + event.target.errorCode);
         };
         result.onsuccess = function(event) {
-            $('option[value="' + name + '"]').remove();
-            if($.trim($('#research_selection').val()) == name) {
-                $('#research_selection').val('');
-            }
+            $('#research_selection option').filter(function () { return this.value === name; }).remove();
+            $('#research_selection').val(NEW_LIST);
+            syncResearchButtons();
         };
     } else {
         initDB();
@@ -280,6 +379,9 @@ function removeListFromIndexedDB(name) {
 
 // LocalStorage solution (Single save)
 function setupLocalStorage() {
+    // Single-save fallback: no named lists, so hide the list picker and Remove
+    $('#preset_dd, #preset_label, #research_remove').hide();
+    $('#research_load').prop('disabled', false);
     $('#research_save').on('click', function(event) {
         event.preventDefault();
         saveResearchToLocalStorage();

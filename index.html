@@ -156,6 +156,7 @@
 
     <script>
       addEventListener('popstate', event => window.location.reload());
+      const ASSET_V = '20261005b'; // bump when assets change so browsers fetch the new files
       const load_page = (param, title, replace) => {
         // replace=true is used for the automatic landing on the latest version, so Back doesn't loop
         history[replace ? 'replaceState' : 'pushState']({pageID: param}, param, `${param}/`);
@@ -165,15 +166,15 @@
         $('<link>').appendTo('head').attr({
             type: 'text/css', 
             rel: 'stylesheet',
-            href: '../assets/css/tech-tree.css'
+            href: '../assets/css/tech-tree.css?v=' + ASSET_V
         });
-        $('<link>').appendTo('head').attr({ type: 'text/css', rel: 'stylesheet', href: '../assets/css/theme.css' });
+        $('<link>').appendTo('head').attr({ type: 'text/css', rel: 'stylesheet', href: '../assets/css/theme.css?v=' + ASSET_V });
         $('<link>').appendTo('head').attr({ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Orbitron:500,700&display=swap' });
-        $('body').load('../assets/html/body.html', function() {
-            $('<script>').appendTo('head').attr({ src: '../assets/js/header.js' });
-            $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tracking.js' });
-            $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tree.js' });
-            $('<script>').appendTo('head').attr({ src: '../assets/js/theme.js' });
+        $('body').load('../assets/html/body.html?v=' + ASSET_V, function() {
+            $('<script>').appendTo('head').attr({ src: '../assets/js/header.js?v=' + ASSET_V });
+            $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tracking.js?v=' + ASSET_V });
+            $('<script>').appendTo('head').attr({ src: '../assets/js/tech-tree.js?v=' + ASSET_V });
+            $('<script>').appendTo('head').attr({ src: '../assets/js/theme.js?v=' + ASSET_V });
         });
       };
     </script>

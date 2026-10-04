@@ -38,34 +38,21 @@
       <h2><img src="../assets/icons/up_to_top.png" class="float-RightImage"> Top</h2>
     </a>
   </li>
-  <li class="float-RightElement float-RightBuffer research hide">
-    <a id="research_save" class="float-RightContents">
-      <h2>Save</h2>
-    </a>
-  </li>
-  <li class="float-RightElement research hide">
-    <a id="research_load" class="float-RightContents">
-      <h2>Load</h2>
-    </a>
-  </li>
-  <li class="float-RightElement research hide">
-    <span class="float-RightContents">Research List:
-      <input id="research_selection" list="research_list">
-      <datalist id="research_list">
-      </datalist>
-    </span>
-  </li>
-  <li class="float-RightElement research hide">
-    <a id="research_remove" class="float-RightContents">
-      <h2>Remove</h2>
-    </a>
-  </li>
-  <li class="float-Element" style="float: right;padding-left: 0px;padding-right: 0px;">
-    <div>
-      <a title="GDPR-compliant Web Analytics" href="https://clicky.com/101366149"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
-      <script async src="//static.getclicky.com/101366149.js"></script>
-      <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101366149ns.gif" /></p></noscript>
+  <li class="float-RightElement float-Research research hide">
+    <span id="preset_label" class="rlabel">Researched Presets</span>
+    <div id="preset_dd" class="dd">
+      <select id="research_selection" class="sr-only" tabindex="-1" aria-hidden="true"></select>
+      <button type="button" id="preset_btn" class="dd-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="preset_label preset_btn">
+        <span class="dd-text">Add New Preset</span>
+        <svg class="dd-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <ul id="preset_menu" class="dd-menu" role="listbox" tabindex="-1" aria-labelledby="preset_label" hidden></ul>
     </div>
+    <button type="button" id="research_load" class="rbtn" title="Load the selected preset" disabled>Load</button>
+    <button type="button" id="research_save" class="rbtn" title="Save your progress to the selected preset, or choose Add New Preset to create one">Save</button>
+    <button type="button" id="research_remove" class="rbtn rbtn-icon danger" title="Delete the selected preset" aria-label="Delete selected preset" disabled>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+    </button>
   </li>
 </ul>
 <div id="tech-tree" style="margin-top:50px">

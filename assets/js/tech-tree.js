@@ -92,116 +92,108 @@ function setup(tech) {
     });
 };
 
-function setup_search() {
-    const trees = document.querySelector('#tech-tree').querySelectorAll("[id|='tech-tree']");
+// Search ---------------------------------------------------------------
+// Nodes are looked up when a search runs (not when the box is wired up), because the trees
+// are loaded asynchronously and don't exist yet when the page first appears.
+const search_text_cache = new WeakMap();
 
-    let nodes = Array.from(trees).filter((t) => {
-        return t.getAttribute("class") == null || !t.getAttribute("class").includes("float-NoDisplay");
-    }).reduce((a, b) => { a.push(...b.querySelectorAll('.node.tech')); return a; }, []);
-    nodes = nodes.reduce((a, b) =>  {
-        let the_text = '';
-        b.querySelectorAll('.node-name, .extra-data .tooltip-content:not(.prerequisites)').forEach(data => {
-            the_text += data.innerText;
-            the_text += data.title;
+function search_text_of(node) {
+    let text = search_text_cache.get(node);
+    if (text === undefined) {
+        text = '';
+        node.querySelectorAll('.node-name, .extra-data .tooltip-content:not(.prerequisites)').forEach(data => {
+            text += ' ' + data.textContent;
         });
-        a.push({ node: b, text: the_text });
-        return a;
-    }, []);
+        text = text.toLowerCase();
+        search_text_cache.set(node, text);
+    }
+    return text;
+}
 
-    const debounce = (callback, wait) => {
-        let timeoutId = null;
-        return (...args) => {
-            window.clearTimeout(timeoutId);
-            timeoutId = window.setTimeout(() => {
-                callback.apply(null, args);
-            }, wait);
-        };
+function search_all_nodes() {
+    return Array.from(document.querySelectorAll('#tech-tree .node.tech'));
+}
+
+function search_visible_nodes() {
+    const trees = document.querySelectorAll('#tech-tree [id|="tech-tree"]');
+    const nodes = new Set();
+    trees.forEach(t => {
+        if (t.classList.contains('float-NoDisplay')) return;
+        t.querySelectorAll('.node.tech').forEach(n => nodes.add(n));
+    });
+    return Array.from(nodes);
+}
+
+function setup_search() {
+    const input = $('#deepsearch');
+    if (!input.length) return;
+
+    // Safe to call repeatedly (tab switches call it again): drop old handlers first.
+    input.off('.deepsearch');
+
+    let hits = [];
+    let focus_idx = -1;
+    let applied_term = null;
+
+    const reset_all = () => {
+        search_all_nodes().forEach(n => n.style.opacity = '');
     };
 
-    let current_idx = 0;
-    current_idx = 0;
-    let last_search_term = "";
-    $("#deepsearch").on("change keyup paste", debounce(function () {
-        const search_term = $('#deepsearch').val();
-        if (search_term == last_search_term) {
+    const focus_hit = (idx) => {
+        if (!hits.length) return;
+        if (focus_idx >= 0 && hits[focus_idx]) hits[focus_idx].style.opacity = 0.6;
+        focus_idx = (idx + hits.length) % hits.length;
+        const node = hits[focus_idx];
+        node.style.opacity = 1;
+        node.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+    };
+
+    const run_search = (force) => {
+        const term = input.val().trim().toLowerCase();
+        if (!force && term === applied_term) return;
+        applied_term = term;
+        focus_idx = -1;
+        hits = [];
+
+        if (!term) {
+            reset_all();
             return;
-        } else {
-            last_search_term = search_term;
         }
 
-        current_idx = 0;
-        if (!search_term) {
-            nodes.forEach(n => n.node.style.opacity = 1);
-            return;
-        }
-        
-        let hits = nodes.filter(n => {
-            const match = n.text.toLowerCase().includes(search_term.toLowerCase());
-            
-            n.node.style.opacity = match ? 0.6 : 0.1;
-
-            return match;
+        // Only nodes in the tabs currently on screen are matched; everything else is reset to normal.
+        reset_all();
+        const nodes = search_visible_nodes();
+        nodes.forEach(n => {
+            const match = search_text_of(n).includes(term);
+            n.style.opacity = match ? 0.6 : 0.1;
+            if (match) hits.push(n);
         });
-
-        console.log(hits.length);
-
 
         hits.sort((a, b) => {
-            return a.node.getBoundingClientRect().top - b.node.getBoundingClientRect().top || a.node.getBoundingClientRect().left - b.node.getBoundingClientRect().left;
+            const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+            return (ra.top - rb.top) || (ra.left - rb.left);
         });
 
-        let first_hit = true;
+        if (hits.length) focus_hit(0);
+    };
 
-        hits.forEach(n => {
-            if (first_hit) {
-                first_hit = false;
-                console.log(n.node);
-                n.node.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                    inline: "nearest",
-                  });
-                n.node.style.opacity = 1;
-            } else {
-                n.node.style.opacity = 0.6;
-            }
-        })
+    const debounced = (() => {
+        let id = null;
+        return () => { window.clearTimeout(id); id = window.setTimeout(() => run_search(false), 250); };
+    })();
 
-    }, 300));
+    input.on('input.deepsearch change.deepsearch paste.deepsearch keyup.deepsearch', debounced);
 
-    $("#deepsearch").on('keypress',function(e) {
-        if(e.which == 13) {
-            const search_term = $('#deepsearch').val();
-
-            let hits = nodes.filter(n => {
-                const match = n.text.toLowerCase().includes(search_term.toLowerCase());
-                
-                n.node.style.opacity = match ? 0.6 : 0.1;
-    
-                return match;
-            });
-    
-    
-            hits.sort((a, b) => {
-                return a.node.getBoundingClientRect().top - b.node.getBoundingClientRect().top || a.node.getBoundingClientRect().left - b.node.getBoundingClientRect().left;
-            });
-
-            if (hits.length == 0) {
-                return; 
-            }
-
-            hits[current_idx % hits.length].node.style.opacity = 0.6;
-            let current_focused = hits[(current_idx + 1) % hits.length].node;
-            current_focused.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "nearest",
-              });
-            current_focused.style.opacity = 1;
-
-            current_idx += 1;
-        }
+    // Enter jumps to the next match (Shift+Enter goes back)
+    input.on('keydown.deepsearch', function (e) {
+        if (e.key !== 'Enter' && e.which !== 13) return;
+        e.preventDefault();
+        run_search(false);               // make sure results match what is typed
+        if (hits.length > 1) focus_hit(focus_idx + (e.shiftKey ? -1 : 1));
     });
+
+    // Re-apply the current term (used after switching tabs so the new tab is filtered too)
+    if (input.val().trim()) run_search(true);
 };
 
 

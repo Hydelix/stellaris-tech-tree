@@ -8,12 +8,59 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
 
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:500,700&display=swap" rel="stylesheet">
     <style>
       a {
         color: -webkit-link;
         cursor: pointer;
         text-decoration: underline;
       }
+      .menu-body {
+        --space: #050a0d; --hull: #0d1717; --teal: #2F6458; --glow: #6fe3c6; --gold: #e0b85c;
+        --text: #d6e4e0; --muted: #8aa39d;
+        margin: 0; min-height: 100vh; color: var(--text); font-family: Arimo, Arial, sans-serif;
+        background:
+          radial-gradient(1px 1px at 20% 30%, #fff8 50%, transparent 51%) 0 0 / 220px 180px,
+          radial-gradient(1px 1px at 70% 60%, #fff6 50%, transparent 51%) 0 0 / 310px 260px,
+          radial-gradient(1.5px 1.5px at 45% 85%, #9fe8d9aa 50%, transparent 51%) 0 0 / 400px 340px,
+          radial-gradient(ellipse 70% 40% at 50% -5%, #1b5a52aa, transparent 70%),
+          var(--space);
+      }
+      .menu-body a { text-decoration: none; color: inherit; }
+      .menu-body a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+      .menu { max-width: 920px; margin: 0 auto; padding: 48px 20px 40px; }
+      .menu h1 { font: 700 clamp(26px, 5vw, 40px)/1.1 Orbitron, Arimo, sans-serif; margin: 0 0 10px; letter-spacing: .02em; color: #eafff9; text-shadow: 0 0 18px #6fe3c655; }
+      .menu .sub { margin: 0 0 32px; color: var(--muted); max-width: 52ch; line-height: 1.5; }
+      .menu h2 { font: 500 15px Orbitron, Arimo, sans-serif; color: var(--gold); margin: 34px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--teal); letter-spacing: .04em; }
+
+      /* Latest version: the one memorable element */
+      .latest { display: flex; align-items: center; gap: 28px; padding: 26px 30px; position: relative;
+        background: linear-gradient(135deg, #14423c, var(--hull) 60%); border: 1px solid var(--glow);
+        box-shadow: 0 0 28px #6fe3c633, inset 0 0 40px #6fe3c60f;
+        clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px)); }
+      .latest:hover { box-shadow: 0 0 40px #6fe3c666, inset 0 0 50px #6fe3c61a; }
+      .latest .num { font: 700 clamp(44px, 9vw, 84px)/1 Orbitron, Arimo, sans-serif; color: #eafff9; text-shadow: 0 0 22px #6fe3c6aa; }
+      .latest .info { display: flex; flex-direction: column; gap: 6px; }
+      .latest .code { font: 500 22px Orbitron, Arimo, sans-serif; color: var(--glow); }
+      .latest .go { color: var(--muted); }
+      .latest .badge { margin-left: auto; align-self: flex-start; font-size: 13px; color: #1b1405; background: var(--gold); padding: 3px 10px; font-weight: 700; }
+
+      /* Older versions */
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+      .tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; position: relative;
+        background: linear-gradient(180deg, #123532cc, var(--hull)); border: 1px solid var(--teal); transition: border-color .15s, box-shadow .15s; }
+      .tile::before, .tile::after { content: ""; position: absolute; width: 8px; height: 8px; border: 0 solid var(--glow); opacity: .7; }
+      .tile::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+      .tile::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+      .tile:hover { border-color: var(--glow); box-shadow: 0 0 14px #6fe3c644; }
+      .tile .ver { font: 700 17px Orbitron, Arimo, sans-serif; color: #eafff9; }
+      .tile .code { color: var(--muted); font-size: 14px; }
+
+      .menu footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--teal); color: var(--muted); font-size: 14px; line-height: 1.7; }
+      .menu footer a { color: var(--glow); border-bottom: 1px solid #6fe3c655; }
+      .menu footer a:hover { border-bottom-color: var(--glow); }
+      @media (max-width: 560px) { .latest { flex-direction: column; align-items: flex-start; gap: 12px; padding: 22px; } .latest .badge { margin-left: 0; order: -1; } }
+      @media (prefers-reduced-motion: reduce) { .tile { transition: none; } }
     </style>
 
     <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
@@ -113,6 +160,8 @@
         // replace=true is used for the automatic landing on the latest version, so Back doesn't loop
         history[replace ? 'replaceState' : 'pushState']({pageID: param}, param, `${param}/`);
         document.title = title || param;
+        document.body.classList.remove('menu-body');
+        $('body').empty();
         $('<link>').appendTo('head').attr({
             type: 'text/css', 
             rel: 'stylesheet',
@@ -162,30 +211,51 @@
           { name: 'Stellaris 2.2.0', route: 'leguin-2.2.0',  title: 'Stellaris 2.2.0 (Leguin)', },
       ];
       $(document).ready(function(){
-        routes.forEach(page => {
-          const ele = $(`<li><a>${page.name}</a></li>`);
-          ele.on("click", function() { load_page(page.route,page.title) });
-          $('#tech-pages').append(ele);
+        const parts = page => ({
+          ver: (page.name.match(/\d+\.\d+\.\d+/) || [page.name])[0],
+          code: (page.title.match(/\(([^)]+)\)/) || [])[1] || ''
+        });
+        const link = (page, cls) => $(`<a class="${cls}" href="?${page.route}"></a>`)
+          .on('click', e => { e.preventDefault(); load_page(page.route, page.title); });
+
+        const latest = routes[0], lp = parts(latest);
+        link(latest, 'latest')
+          .append(`<span class="num">${lp.ver}</span>`)
+          .append(`<span class="info"><span class="code">${lp.code}</span><span class="go">Open the tech tree for Stellaris ${lp.ver}</span></span>`)
+          .append('<span class="badge">Latest</span>')
+          .appendTo('#latest');
+
+        const eras = {};
+        routes.slice(1).forEach(page => {
+          const major = parts(page).ver.split('.')[0] + '.x';
+          (eras[major] = eras[major] || []).push(page);
+        });
+        Object.keys(eras).forEach(major => {
+          $('#eras').append(`<h2>Stellaris ${major}</h2>`);
+          const grid = $('<div class="grid"></div>').appendTo('#eras');
+          eras[major].forEach(page => {
+            const p = parts(page);
+            link(page, 'tile').append(`<span class="ver">${p.ver}</span>`).append(`<span class="code">${p.code}</span>`).appendTo(grid);
+          });
         });
       });
     </script>
 
 </head>
-    <body>
-      <b>Technology</b>
-      <ul id="tech-pages">
-      </ul>
-
-      <b>Job List</b>
-      <ul>
-        <li><a href="jobs/index.html">Stellaris 2.2.7 Jobs List (WIP)</a></li>
-      </ul>
-
-      <p>
-      Original code by <a href="https://gitlab.com/bipedalshark/stellaris-tech-tree" target="_blank">bipedalshark</a><br/>
-      Current Parser code: <a href="https://github.com/BloodStainedCrow/stellaris-technology">GitHub</a><br/>
-      Current Website code: <a href="https://github.com/BloodStainedCrow/stellaris-tech-tree">GitHub</a><br/>
-      Contributors: SlenderPlays, Tsudico, Turanar, BloodStainedCrow & ark-1 <br/>
-      </p>
+    <body class="menu-body">
+      <main class="menu">
+        <h1>Stellaris Tech Tree</h1>
+        <p class="sub">Browse the research tree for any patch. The newest release is first; older versions are grouped below.</p>
+        <section id="latest"></section>
+        <section id="eras"></section>
+        <h2>Job list</h2>
+        <div class="grid"><a class="tile" href="jobs/index.html"><span class="ver">2.2.7</span><span class="code">Jobs list (work in progress)</span></a></div>
+        <footer>
+          Original code by <a href="https://gitlab.com/bipedalshark/stellaris-tech-tree" target="_blank">bipedalshark</a><br/>
+          Current parser code: <a href="https://github.com/BloodStainedCrow/stellaris-technology">GitHub</a><br/>
+          Current website code: <a href="https://github.com/BloodStainedCrow/stellaris-tech-tree">GitHub</a><br/>
+          Contributors: SlenderPlays, Tsudico, Turanar, BloodStainedCrow &amp; ark-1
+        </footer>
+      </main>
     </body>
 </html>

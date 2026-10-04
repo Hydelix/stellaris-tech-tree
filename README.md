@@ -1,6 +1,6 @@
 # Stellaris Tech Tree
 
-An interactive, browsable tech tree for the grand strategy game [Stellaris](https://store.steampowered.com/app/281990/Stellaris/), kept up to date with the latest patch.
+An interactive, browsable tech tree for [Stellaris](https://store.steampowered.com/app/281990/Stellaris/).
 
 **Live site: https://hydelix.github.io/stellaris-tech-tree/**
 

@@ -109,8 +109,9 @@
 
     <script>
       addEventListener('popstate', event => window.location.reload());
-      const load_page = (param, title) => {
-        history.pushState({pageID: param}, param, `${param}/`);
+      const load_page = (param, title, replace) => {
+        // replace=true is used for the automatic landing on the latest version, so Back doesn't loop
+        history[replace ? 'replaceState' : 'pushState']({pageID: param}, param, `${param}/`);
         document.title = title || param;
         $('<link>').appendTo('head').attr({
             type: 'text/css', 
@@ -127,12 +128,13 @@
 
     <script>
       $(document).ready(function(){
-        if (window.location.search) {
-          const page = window.routes.find(r => r.route === window.location.search.slice(1));
-          if (page) {
-            load_page(page.route, page.title);
-          }
-        }
+        const query = window.location.search.slice(1);
+        // index.html?menu shows the full version list (the in-page "Back" button links here)
+        if (query === 'menu') return;
+        // Any other visit goes straight to the requested version, or the latest one (first in the list)
+        const requested = window.routes.find(r => r.route === query);
+        const page = requested || window.routes[0];
+        load_page(page.route, page.title, !requested);
       });
     </script>
 
